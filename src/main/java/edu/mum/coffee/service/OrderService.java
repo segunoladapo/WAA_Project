@@ -39,7 +39,7 @@ public class OrderService {
 	}
 
 	public Order findById(int id){
-		return orderRepository.findOne(id);
+		return orderRepository.getOne(id);
 	}
 
 	public List<Order> findAll(){
