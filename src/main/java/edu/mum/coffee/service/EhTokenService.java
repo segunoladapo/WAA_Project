@@ -40,4 +40,9 @@ public class EhTokenService {
         Element element = new Element(key, obj);
         cache.put(element);
     }
+
+    public void clearObject(String key){
+        Cache cache = cacheManager.getCache("tokenCache");
+        cache.remove(key);
+    }
 }

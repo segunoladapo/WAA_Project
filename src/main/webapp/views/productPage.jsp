@@ -21,31 +21,37 @@
 <div class="container">
     <div class="row align-items-center justify-content-center">
         <form:form method="POST" modelAttribute="product" action="/productAddToCart">
+            <input type="hidden" value="${product.id}" name="id"/>
             <div class="form-group">
                 <label>Product Type</label>
                 <form:textarea path="productType" cssClass="form-control" disabled="true"/>
+                <input type="hidden" value="${product.productType}" name="productType"/>
             </div>
             <div class="form-group">
                 <label>Name</label>
-                <form:label path="productName" cssClass="form-control"/>
+                <form:textarea path="productName" cssClass="form-control" disabled="true"/>
+                <input type="hidden" value="${product.productName}" name="productName"/>
             </div>
 
             <div class="form-group">
                 <label>Price</label>
-                <form:label path="price" cssClass="form-control"/>
+                <form:textarea path="price" cssClass="form-control" disabled="true"/>
+                <input type="hidden" value="${product.price}" name="price"/>
             </div>
 
             <div class="form-group">
                 <label>Description</label>
-                <form:label path="description" cssClass="form-control"/>
+                <form:textarea path="description" cssClass="form-control" disabled="true"/>
+                <input type="hidden" value="${product.description}" name="description"/>
             </div>
 
             <div class="form-group">
                 <label>Quantity</label>
-                <input type="text" value="" name="quantity" class="form-group" placeholder="Please enter you quantity here"/>
+                <input type="text" value="" name="quantity" class="form-control"
+                       placeholder="Please enter you quantity here"/>
             </div>
-            <input type="hidden" value="${token}" name="X-Auth-Token" />
-            <form:hidden path="id" />
+            <input type="hidden" value="${token}" name="X-Auth-Token"/>
+
             <button type="submit" class="btn btn-primary">Add to Cart</button>
         </form:form>
     </div>
