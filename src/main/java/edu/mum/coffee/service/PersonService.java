@@ -16,6 +16,7 @@ public class PersonService {
 	@Autowired
 	private PersonRepository personRepository;
 
+	@Transactional
 	public Person savePerson(Person person) {
 		return personRepository.save(person);
 	}

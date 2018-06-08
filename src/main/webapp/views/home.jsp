@@ -8,15 +8,31 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Insert title here</title>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css">
+
+	<title>Coffe Shop Home Page</title>
 </head>
 <body>
-	You can choose any presentation framework that could be integrated with
-	Spring
-	<p>
-	<p>
-		The only user is "<b>super</b>" and the password is "<b>pw</b>"
-	<p>
-		<a href="<c:url value="/secure" />"> Go to Secure Area </a>
+<div class="jumbotron">
+	<div class="row align-items-center justify-content-center">
+		<h1>Login Here</h1>
+	</div>
+</div>
+<div class="row align-items-center justify-content-center">
+	${response}
+	<form:form method="POST" modelAttribute="person" action="/autnenticate">
+		<div class="form-group">
+			<label >Email address</label>
+			<form:input path="email" cssClass="form-control" />
+		</div>
+		<div class="form-group">
+			<label >Enter Password</label>
+			<form:password path="password" cssClass="form-control" />
+		</div>
+		<button type="submit" class="btn btn-primary">Submit</button>
+	</form:form>
+
+</div>
+
 </body>
 </html>
