@@ -1,22 +1,23 @@
 package edu.mum.coffee.controller;
 
-import edu.mum.coffee.domain.Order;
-import edu.mum.coffee.domain.Orderline;
-import edu.mum.coffee.domain.Person;
-import edu.mum.coffee.domain.Product;
+import edu.mum.coffee.domain.*;
 import edu.mum.coffee.service.EhTokenService;
 import edu.mum.coffee.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 import java.security.Principal;
+import java.util.HashMap;
 
 @Controller
 public class ProductController {
@@ -40,7 +41,7 @@ public class ProductController {
     public String addToCart(Product product, Model model, HttpServletRequest request, Principal principal) {
         String token = request.getParameter("X-Auth-Token");
         int quantity = Integer.valueOf(request.getParameter("quantity"));
-        Person person = (Person)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Person person = (Person) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         String orderKey = person.getEmail() + "-" + "cart";
         Orderline orderline = new Orderline();
         orderline.setProduct(product);
@@ -49,6 +50,30 @@ public class ProductController {
         order.setPerson(person);
         order.addOrderLine(orderline);
         orderline.setOrder(order);
+        return "redirect:/welcome?X-Auth-Token=" + token;
+    }
+
+    @GetMapping(path = "/product")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
+    public String newProduct(Model model, HttpServletRequest request) {
+        String token = request.getParameter("X-Auth-Token");
+        HashMap<String, String> productTypeList = new HashMap<>();
+        for (ProductType productType : ProductType.values()) {
+            productTypeList.put(productType.name(), productType.name());
+        }
+        model.addAttribute("productTypeList", productTypeList);
+        model.addAttribute("product", new Product());
+        model.addAttribute("token", token);
+        return "createProduct";
+    }
+
+    @PostMapping(path = "/saveProduct")
+    public String saveProduct(@Valid Product product, BindingResult bindingResult, Model model, HttpServletRequest request, Principal principal) {
+        String token = request.getParameter("X-Auth-Token");
+        if(bindingResult.hasErrors()){
+            return "createProduct";
+        }
+        productService.save(product);
         return "redirect:/welcome?X-Auth-Token=" + token;
     }
 }

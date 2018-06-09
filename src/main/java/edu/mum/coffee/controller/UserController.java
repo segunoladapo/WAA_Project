@@ -32,6 +32,9 @@ public class UserController {
     @Autowired
     private ProductService productService;
 
+    @Autowired
+    private OrderService orderService;
+
     @PostMapping(path = "/user")
     public String createUser(@Valid Person person, Model model, BindingResult bindingResult) {
         Person personRepo = personService.savePerson(person);
@@ -63,7 +66,7 @@ public class UserController {
                     null, AuthorityUtils.commaSeparatedStringToAuthorityList("ROLE_" + personList.get(0).getRole())));
         } else {
             token = tokenService.setToken(new AuthenticationWithToken(personList.get(0),
-                    null, AuthorityUtils.commaSeparatedStringToAuthorityList("ROLE_" + personList.get(0).getRole())));
+                    null, AuthorityUtils.commaSeparatedStringToAuthorityList("ROLE_USER")));
         }
         return "redirect:/welcome?X-Auth-Token=" + token;
     }
@@ -72,15 +75,22 @@ public class UserController {
     public String welcomePage(Model model, HttpServletRequest request) {
         String token = request.getParameter("X-Auth-Token");
         model.addAttribute("token", token);
-        model.addAttribute("products", productService.getAllProduct());
+        List<Product> products =  productService.getAllProduct();
+        model.addAttribute("products", products);
         Order order = null;
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Person principal = (Person)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         String orderKey = ((Person) principal).getEmail() + "-" + "cart";
         if (tokenService.contains(orderKey)) {
             order = (Order) tokenService.retrieve(orderKey);
         }else{
             order = new Order();
             tokenService.saveObject(orderKey, order);
+        }
+        if(principal.isAdmin()){
+            List<Order> orders = orderService.findAll();
+            model.addAttribute("orders", orders);
+            model.addAttribute("users",personService.getAll());
+
         }
         model.addAttribute("order", order);
         return "welcome";
