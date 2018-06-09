@@ -13,11 +13,15 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.security.Principal;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 @Controller
 public class ProductController {
@@ -70,10 +74,34 @@ public class ProductController {
     @PostMapping(path = "/saveProduct")
     public String saveProduct(@Valid Product product, BindingResult bindingResult, Model model, HttpServletRequest request, Principal principal) {
         String token = request.getParameter("X-Auth-Token");
-        if(bindingResult.hasErrors()){
+        if (bindingResult.hasErrors()) {
             return "createProduct";
         }
         productService.save(product);
+        return "redirect:/welcome?X-Auth-Token=" + token;
+    }
+
+    @GetMapping(path = "/productEdit/{id}")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
+    public String displayProductToEdit(@PathVariable int id, Model model, HttpServletRequest request) {
+        String token = request.getParameter("X-Auth-Token");
+        Product product = productService.getProduct(id);
+        model.addAttribute("product", product);
+        List<String> productTypeList = new ArrayList<>();
+        for (ProductType productType : ProductType.values()) {
+            productTypeList.add(productType.name());
+        }
+        model.addAttribute("productTypeList", productTypeList);
+        model.addAttribute("token", token);
+        return "productEditPage";
+    }
+
+
+    @PutMapping(path = "/product")
+    public String editProduct(Product product, RedirectAttributes redirAttr, HttpServletRequest request, Principal principal) {
+        String token = request.getParameter("X-Auth-Token");
+        productService.save(product);
+        redirAttr.addFlashAttribute("response", "Changes made successfully");
         return "redirect:/welcome?X-Auth-Token=" + token;
     }
 }

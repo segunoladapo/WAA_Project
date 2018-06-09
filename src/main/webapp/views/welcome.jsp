@@ -44,6 +44,11 @@
             </c:if>
             </div>
         </h3>
+        <div class="row align-items-center justify-content-center">
+            <a class="btn btn-primary" href="/userProfile/${product.id}?X-Auth-Token=${token}" role="button">Edit Profile</a>
+        </div>
+    </div>
+
     </div>
 </div>
 

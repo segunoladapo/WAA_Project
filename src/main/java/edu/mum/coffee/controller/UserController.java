@@ -75,26 +75,48 @@ public class UserController {
     public String welcomePage(Model model, HttpServletRequest request) {
         String token = request.getParameter("X-Auth-Token");
         model.addAttribute("token", token);
-        List<Product> products =  productService.getAllProduct();
+        List<Product> products = productService.getAllProduct();
         model.addAttribute("products", products);
         Order order = null;
-        Person principal = (Person)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Person principal = (Person) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         String orderKey = ((Person) principal).getEmail() + "-" + "cart";
         if (tokenService.contains(orderKey)) {
             order = (Order) tokenService.retrieve(orderKey);
-        }else{
+        } else {
             order = new Order();
             tokenService.saveObject(orderKey, order);
         }
-        if(principal.isAdmin()){
+        if (principal.isAdmin()) {
             List<Order> orders = orderService.findAll();
             model.addAttribute("orders", orders);
-            model.addAttribute("users",personService.getAll());
+            model.addAttribute("users", personService.getAll());
 
         }
         model.addAttribute("order", order);
         return "welcome";
     }
 
+    @GetMapping(path = "/userProfile")
+    public String viewUserProfile(Model model, HttpServletRequest request) {
+        String token = request.getParameter("X-Auth-Token");
+        Person principal = (Person) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        List<Person> person = personService.findByEmail(principal.getEmail());
+        model.addAttribute("person", person.get(0));
+        model.addAttribute("token", token);
+        return "userEditProfilePage";
+    }
+
+    @PutMapping(path = "/user")
+    public String editUserProfile(Person person, Model model, BindingResult bindingResult,
+                                  RedirectAttributes redirAttr, HttpServletRequest request) {
+        String token = request.getParameter("X-Auth-Token");
+        model.addAttribute("token", token);
+        Person principal = (Person) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        List<Person> personList = personService.findByEmail(principal.getEmail());
+        person.setId(personList.get(0).getId());
+        personService.savePerson(person);
+        redirAttr.addAttribute("response", "Profile Edited successfully");
+        return "redirect:/welcome?X-Auth-Token=" + token;
+    }
 
 }

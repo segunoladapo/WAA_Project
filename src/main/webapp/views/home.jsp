@@ -35,7 +35,11 @@
         <button type="submit" class="btn btn-primary">Submit</button>
     </form:form>
 
-</div>
 
+</div>
+<p></p>
+<div class="row align-items-center justify-content-center">
+    <a href="/user"><h4>Sign Up here</h4></a>
+</div>
 </body>
 </html>
