@@ -114,6 +114,7 @@ public class UserController {
         model.addAttribute("token", token);
         Person principal = (Person) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         List<Person> personList = personService.findByEmail(principal.getEmail());
+        person.setEmail(principal.getEmail());
         person.setId(personList.get(0).getId());
         person.setRole(personList.get(0).getRole());
         person.setAdmin(personList.get(0).isAdmin());

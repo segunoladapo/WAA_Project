@@ -19,7 +19,7 @@ public class TokenProviderConfig {
                 new CacheConfiguration(TOKEN_CACHE, 80000)
                         .memoryStoreEvictionPolicy(MemoryStoreEvictionPolicy.LFU)
                         .eternal(false)
-                        .timeToIdleSeconds(30));
+                        .timeToIdleSeconds(300));
         Cache unExpiredCache = new Cache(
                 new CacheConfiguration(UNEXPIREDCACHE, 80000)
                         .memoryStoreEvictionPolicy(MemoryStoreEvictionPolicy.LFU)
