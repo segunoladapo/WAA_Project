@@ -50,7 +50,7 @@
     </div>
     <div class="row align-items-center justify-content-center">
         <form action="/deleteToken?token=${token}" method="POST">
-            <button type="submit" class="btn btn-primary">Logout</button>
+            <div style="margin-right: 20pt"> <button type="submit" class="btn btn-primary">Logout</button></div>
         </form>
         <a class="btn btn-primary" href="/userProfile/${product.id}?X-Auth-Token=${token}" role="button">Edit
             Profile</a>
