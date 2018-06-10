@@ -16,8 +16,8 @@ public class EhTokenService {
     @Autowired
     private CacheManager cacheManager;
 
-    public boolean contains(String key){
-        Cache cache = cacheManager.getCache("tokenCache");
+    public boolean contains(String key, String cacheName){
+        Cache cache = cacheManager.getCache(cacheName);
         return cache.get(key) != null;
     }
 
@@ -30,19 +30,19 @@ public class EhTokenService {
         return token;
     }
 
-    public Object retrieve(String token){
-        return cacheManager.getCache("tokenCache").get(token).getObjectValue();
+    public Object retrieve(String token, String cacheName){
+        return cacheManager.getCache(cacheName).get(token).getObjectValue();
     }
 
 
-    public void saveObject(String key, Object obj){
-        Cache cache = cacheManager.getCache("tokenCache");
+    public void saveObject(String key, Object obj, String cachName){
+        Cache cache = cacheManager.getCache(cachName);
         Element element = new Element(key, obj);
         cache.put(element);
     }
 
-    public void clearObject(String key){
-        Cache cache = cacheManager.getCache("tokenCache");
+    public void clearObject(String key, String cacheName){
+        Cache cache = cacheManager.getCache(cacheName);
         cache.remove(key);
     }
 }

@@ -6,6 +6,7 @@ import edu.mum.coffee.service.EhTokenService;
 import edu.mum.coffee.service.OrderService;
 import edu.mum.coffee.service.PersonService;
 import edu.mum.coffee.service.ProductService;
+import edu.mum.coffee.util.Utility;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -80,11 +81,11 @@ public class UserController {
         Order order = null;
         Person principal = (Person) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         String orderKey = ((Person) principal).getEmail() + "-" + "cart";
-        if (tokenService.contains(orderKey)) {
-            order = (Order) tokenService.retrieve(orderKey);
+        if (tokenService.contains(orderKey, Utility.UNEXPIREDCACHE)) {
+            order = (Order) tokenService.retrieve(orderKey, Utility.UNEXPIREDCACHE);
         } else {
             order = new Order();
-            tokenService.saveObject(orderKey, order);
+            tokenService.saveObject(orderKey, order, Utility.UNEXPIREDCACHE);
         }
         if (principal.isAdmin()) {
             List<Order> orders = orderService.findAll();
@@ -114,8 +115,10 @@ public class UserController {
         Person principal = (Person) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         List<Person> personList = personService.findByEmail(principal.getEmail());
         person.setId(personList.get(0).getId());
+        person.setRole(personList.get(0).getRole());
+        person.setAdmin(personList.get(0).isAdmin());
         personService.savePerson(person);
-        redirAttr.addAttribute("response", "Profile Edited successfully");
+        redirAttr.addFlashAttribute("response", "Profile Edited successfully");
         return "redirect:/welcome?X-Auth-Token=" + token;
     }
 

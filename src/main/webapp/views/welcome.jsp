@@ -34,23 +34,21 @@
                 Your cart is empty
             </c:if>
             <c:if test="${fn:length(order.orderLines) > 0}">
-                <div class="container button-wrapper">
-                 </div>
             <div class="row align-items-center justify-content-center">
                 <a href="/viewCart?X-Auth-Token=${token}" class="btn btn-info btn-lg">
                     <span class="glyphicon glyphicon-shopping-cart">
                     </span>
                   ${order.orderLines.size()} Item(s)</a>
             </c:if>
-            </div>
-        </h3>
-        <div class="row align-items-center justify-content-center">
-            <a class="btn btn-primary" href="/userProfile/${product.id}?X-Auth-Token=${token}" role="button">Edit Profile</a>
-        </div>
-    </div>
 
+        </h3>
+    </div>
+    <div class="row align-items-center justify-content-center">
+        <a class="btn btn-primary" href="/userProfile/${product.id}?X-Auth-Token=${token}" role="button">Edit Profile</a>
     </div>
 </div>
+
+
 
 <div class="container">
     <h2>Product In Store</h2>

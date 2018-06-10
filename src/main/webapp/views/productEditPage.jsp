@@ -3,6 +3,7 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix="sec"
            uri="http://www.springframework.org/security/tags" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jstl/fmt" %>
 
 <!DOCTYPE html>
 <html>
@@ -25,8 +26,16 @@
             <div class="form-group">
                 <label>Product Type</label>
                 <form:select path = "productType" cssClass="form-control">
-                    <form:option value = "${product.productType}" label = "${product.productType}"   class="form-control"/>
-                    <form:options items = "${productTypeList}" />
+                    <c:forEach var="productTypeVal" items="${productTypeList}">
+                        <c:choose>
+                            <c:when test="${productTypeVal eq productTypeSelected}">
+                                <option value="${productTypeVal}" selected="true">${productTypeVal}</option>
+                            </c:when>
+                            <c:otherwise>
+                                <option value="${productTypeVal}">${productTypeVal}</option>
+                            </c:otherwise>
+                        </c:choose>
+                    </c:forEach>
                 </form:select>
             </div>
 
