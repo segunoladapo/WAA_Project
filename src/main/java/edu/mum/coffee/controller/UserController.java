@@ -61,6 +61,10 @@ public class UserController {
             redirAttr.addFlashAttribute("response", "Invalid Email or password");
             return "redirect:/home";
         }
+        if(!personList.get(0).getPassword().equals(person.getPassword())){
+            redirAttr.addFlashAttribute("response", "Invalid Email or password");
+            return "redirect:/home";
+        }
         String token = null;
         if (personList.get(0).isAdmin()) {
             token = tokenService.setToken(new AuthenticationWithToken(personList.get(0),

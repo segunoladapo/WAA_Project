@@ -24,7 +24,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.headers().disable().
                 authorizeRequests().antMatchers("/", "/index", "/authenticate", "/home",
-                "/user", "/api/product","/deleteToken").permitAll().
+                "/user", "/api/product","/deleteToken","/api/product/{id}").permitAll().
                 anyRequest().authenticated().and().
                 csrf().disable().
                 sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).

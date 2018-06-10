@@ -6,10 +6,7 @@ import edu.mum.coffee.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.parameters.P;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -26,4 +23,13 @@ public class ProductController {
     public List<Product> getAllProducts(){
         return productService.getAllProduct();
     }
+
+    @ResponseBody
+    @GetMapping(value = "/product/{id}", produces =  "application/json")
+    public  Product getProductById(@PathVariable int id){
+        Product product = productService.getProduct(id);
+        double price = product.getPrice();
+       return product;
+    }
+
 }
