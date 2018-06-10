@@ -30,17 +30,20 @@
     <form:form method="PUT" modelAttribute="person" action="/user" onsubmit="return validation()">
         <form:hidden path="id" cssClass="form-control" />
         <form:hidden path="address.id" cssClass="form-control" />
+
+
+        <div class="form-group">
+            <label >Email address</label>
+            <form:input path="email" id="email" cssClass="form-control" disabled="true"/>
+            <span id="emailError"></span>
+        </div>
+
         <div class="form-group">
             <label >Enter Password</label>
             <form:password path="password" id="pword" cssClass="form-control"  />
             <span id="passwordError"></span>
         </div>
 
-        <div class="form-group">
-            <label >Email address</label>
-            <form:input path="email" id="email" cssClass="form-control" />
-            <span id="emailError"></span>
-        </div>
         <div class="form-group">
             <label >First Name</label>
             <form:input path="firstName" cssClass="form-control" id="fname" maxlength="25"/>
